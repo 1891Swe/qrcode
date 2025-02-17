@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Generator</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .tab-button {
+            padding: 10px 20px;
+            border: none;
+            background-color: #e0e0e0;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .tab-button.active {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #qrcode {
+            text-align: center;
+            margin-top: 20px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="tabs">
+            <button class="tab-button active" data-tab="url">URL QR Code</button>
+            <button class="tab-button" data-tab="wifi">WiFi QR Code</button>
+        </div>
+
+        <div id="urlTab" class="tab-content active">
+            <div class="form-group">
+                <label for="url">Enter URL:</label>
+                <input type="url" id="url" placeholder="https://example.com">
+            </div>
+            <button onclick="generateURLQR()">Generate URL QR Code</button>
+        </div>
+
+        <div id="wifiTab" class="tab-content">
+            <div class="form-group">
+                <label for="ssid">Network Name (SSID):</label>
+                <input type="text" id="ssid" placeholder="Your WiFi Name">
+            </div>
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" placeholder="WiFi Password">
+            </div>
+            <div class="form-group">
+                <label for="encryption">Security Type:</label>
+                <select id="encryption">
+                    <option value="WPA">WPA/WPA2</option>
+                    <option value="WEP">WEP</option>
+                    <option value="nopass">No Password</option>
+                </select>
+            </div>
+            <button onclick="generateWiFiQR()">Generate WiFi QR Code</button>
+        </div>
+
+        <div id="qrcode"></div>
+    </div>
+
+    <script>
+        // Tab switching functionality
+        const tabs = document.querySelectorAll('.tab-button');
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                // Remove active class from all tabs and contents
+                document.querySelectorAll('.tab-button').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                
+                // Add active class to clicked tab and corresponding content
+                tab.classList.add('active');
+                document.getElementById(tab.dataset.tab + 'Tab').classList.add('active');
+                
+                // Clear QR code when switching tabs
+                document.getElementById('qrcode').innerHTML = '';
+            });
+        });
+
+        // Function to generate URL QR code
+        function generateURLQR() {
+            const url = document.getElementById('url').value;
+            if (!url) {
+                alert('Please enter a URL');
+                return;
+            }
+            generateQR(url);
+        }
+
+        // Function to generate WiFi QR code
+        function generateWiFiQR() {
+            const ssid = document.getElementById('ssid').value;
+            const password = document.getElementById('password').value;
+            const encryption = document.getElementById('encryption').value;
+
+            if (!ssid) {
+                alert('Please enter a network name');
+                return;
+            }
+
+            // Format according to WiFi QR code standard
+            const wifiString = `WIFI:T:${encryption};S:${ssid};P:${password};;`;
+            generateQR(wifiString);
+        }
+
+        // Function to generate QR code
+        function generateQR(data) {
+            // Clear previous QR code
+            document.getElementById('qrcode').innerHTML = '';
+            
+            // Generate new QR code
+            new QRCode(document.getElementById('qrcode'), {
+                text: data,
+                width: 200,
+                height: 200,
+                colorDark: '#000000',
+                colorLight: '#ffffff',
+                correctLevel: QRCode.CorrectLevel.H
+            });
+        }
+    </script>
+</body>
+</html>
