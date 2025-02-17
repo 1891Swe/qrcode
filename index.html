@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Generator - Dark Theme</title>
+    <link rel="stylesheet" href="css/qr-styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="tabs">
+            <button class="tab-button active" data-tab="url">URL QR Code</button>
+            <button class="tab-button" data-tab="wifi">WiFi QR Code</button>
+        </div>
+
+        <div id="urlTab" class="tab-content active">
+            <div class="form-group">
+                <label for="url">Enter URL:</label>
+                <input type="url" id="url" placeholder="https://example.com">
+            </div>
+            <button onclick="generateURLQR()">Generate URL QR Code</button>
+        </div>
+
+        <div id="wifiTab" class="tab-content">
+            <div class="form-group">
+                <label for="ssid">Network Name (SSID):</label>
+                <input type="text" id="ssid" placeholder="Your WiFi Name">
+            </div>
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" placeholder="WiFi Password">
+            </div>
+            <div class="form-group">
+                <label for="encryption">Security Type:</label>
+                <select id="encryption">
+                    <option value="WPA">WPA/WPA2</option>
+                    <option value="WEP">WEP</option>
+                    <option value="nopass">No Password</option>
+                </select>
+            </div>
+            <button onclick="generateWiFiQR()">Generate WiFi QR Code</button>
+        </div>
+
+        <div id="qrcode"></div>
+    </div>
+
+    <script src="js/qr-script.js"></script>
+</body>
+</html>
