@@ -117,7 +117,7 @@ button:active {
 }
 
 #qrcode img {
-    filter: hue-rotate(325deg) saturate(200%); /* Makes QR code appear red */
+    filter: hue-rotate(325deg) saturate(200%);
 }
 
 /* Tab content styles */
