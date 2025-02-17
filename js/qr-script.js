@@ -46,13 +46,13 @@ function generateQR(data) {
     // Clear previous QR code
     document.getElementById('qrcode').innerHTML = '';
     
-    // Generate new QR code
+    // Generate new QR code with white background and black modules
     new QRCode(document.getElementById('qrcode'), {
         text: data,
         width: 200,
         height: 200,
-        colorDark: '#ff0000',
-        colorLight: '#1a1a1a',
+        colorDark: '#000000',  // Black QR code
+        colorLight: '#ffffff',  // White background
         correctLevel: QRCode.CorrectLevel.H
     });
 }
