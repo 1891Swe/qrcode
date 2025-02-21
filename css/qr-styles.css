@@ -151,6 +151,23 @@ button:active {
     text-align: right;
 }
 
+/* File info styles */
+.file-info {
+    font-size: 12px;
+    color: #666;
+    margin-top: 4px;
+    margin-bottom: 8px;
+}
+
+/* Error message styles */
+.error-message {
+    color: #e74c3c;
+    font-size: 13px;
+    margin-top: 5px;
+    font-weight: bold;
+    min-height: 20px;
+}
+
 /* Download button styles */
 #download-container {
     margin-top: 20px;
