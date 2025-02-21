@@ -14,6 +14,21 @@ body {
     color: #333;  /* Darker text for better contrast */
 }
 
+/* Headline styles */
+.headline {
+    text-align: center;
+    color: #333;
+    margin-bottom: 5px;
+    font-size: 28px;
+}
+
+.tagline {
+    text-align: center;
+    color: #666;
+    margin-bottom: 20px;
+    font-size: 16px;
+}
+
 /* Main container styles */
 .container {
     max-width: 600px;
