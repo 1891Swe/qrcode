@@ -25,18 +25,85 @@ document.getElementById('logoSizeWifi').addEventListener('input', function() {
     document.getElementById('logoSizeValueWifi').textContent = this.value + '%';
 });
 
+// Add file validation for logo uploads
+document.getElementById('logoUrl').addEventListener('change', function() {
+    validateLogoFile(this, 'logoUrlError');
+});
+
+document.getElementById('logoWifi').addEventListener('change', function() {
+    validateLogoFile(this, 'logoWifiError');
+});
+
+// Function to validate logo file
+function validateLogoFile(fileInput, errorElementId) {
+    const errorElement = document.getElementById(errorElementId);
+    errorElement.textContent = '';
+    
+    if (fileInput.files.length === 0) return;
+    
+    const file = fileInput.files[0];
+    const maxSizeInBytes = 1 * 1024 * 1024; // 1MB
+    
+    // Check file size
+    if (file.size > maxSizeInBytes) {
+        errorElement.textContent = 'File size exceeds 1MB. Please choose a smaller image.';
+        fileInput.value = ''; // Clear the file input
+        return;
+    }
+    
+    // Check image dimensions
+    const img = new Image();
+    img.onload = function() {
+        const width = this.width;
+        const height = this.height;
+        
+        // Check if dimensions are extremely large
+        if (width > 2000 || height > 2000) {
+            errorElement.textContent = 'Image dimensions too large. Please use an image under 2000x2000px.';
+            fileInput.value = ''; // Clear the file input
+        }
+        
+        // Warn if not square (but still allow it)
+        const aspectRatio = width / height;
+        if (aspectRatio < 0.9 || aspectRatio > 1.1) {
+            errorElement.textContent = 'Warning: Non-square images may not display optimally.';
+        }
+    };
+    
+    img.onerror = function() {
+        errorElement.textContent = 'Invalid image file. Please choose another.';
+        fileInput.value = ''; // Clear the file input
+    };
+    
+    // Load the image to check dimensions
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+}
+
 // Function to generate URL QR code
 function generateURLQR() {
     const url = document.getElementById('url').value;
     const logoFile = document.getElementById('logoUrl').files[0];
     const logoSize = document.getElementById('logoSizeUrl').value;
+    const errorElement = document.getElementById('logoUrlError');
     
     if (!url) {
         alert('Please enter a URL');
         return;
     }
+    
+    // Clear any previous error messages
+    errorElement.textContent = '';
 
     if (logoFile) {
+        // Validate file size once more before proceeding
+        if (logoFile.size > 1 * 1024 * 1024) {
+            errorElement.textContent = 'File size exceeds 1MB. Please choose a smaller image.';
+            return;
+        }
         generateQRWithLogo(url, logoFile, logoSize);
     } else {
         generateQR(url);
@@ -50,16 +117,25 @@ function generateWiFiQR() {
     const encryption = document.getElementById('encryption').value;
     const logoFile = document.getElementById('logoWifi').files[0];
     const logoSize = document.getElementById('logoSizeWifi').value;
+    const errorElement = document.getElementById('logoWifiError');
 
     if (!ssid) {
         alert('Please enter a network name');
         return;
     }
+    
+    // Clear any previous error messages
+    errorElement.textContent = '';
 
     // Format according to WiFi QR code standard
     const wifiString = `WIFI:T:${encryption};S:${ssid};P:${password};;`;
     
     if (logoFile) {
+        // Validate file size once more before proceeding
+        if (logoFile.size > 1 * 1024 * 1024) {
+            errorElement.textContent = 'File size exceeds 1MB. Please choose a smaller image.';
+            return;
+        }
         generateQRWithLogo(wifiString, logoFile, logoSize);
     } else {
         generateQR(wifiString);
